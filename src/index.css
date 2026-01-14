@@ -1,0 +1,98 @@
+@import url("https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&family=Fira+Code:wght@300..700&family=Handlee&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Ovo&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+:root {
+  /* Main Colors */
+  --background-color: #f5f5f7;
+  --background-secondary: #e8e8ed;
+  --foreground-color: #ff7b00;
+  --foreground-hover: #ff9533;
+  --form-bg-color: #ffffff;
+  --border-color: #d1d1d6;
+  --primary-color: #1d1d1f;
+
+  /* Accent Colors */
+  --accent-blue: #007aff;
+  --accent-purple: #af52de;
+  --accent-pink: #ff2d55;
+  --accent-teal: #5ac8fa;
+
+  /* Semantic Colors */
+  --success-color: #34c759;
+  --warning-color: #ff9500;
+  --error-color: #ff3b30;
+  --info-color: #007aff;
+
+  /* Text Colors */
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #8e8e93;
+
+  /* Subtle Backgrounds */
+  --surface-elevated: #ffffff;
+  --surface-subtle: #fafafa;
+  --overlay-bg: rgba(0, 0, 0, 0.4);
+}
+
+@theme {
+  --color-background: var(--background-color);
+  --color-background-secondary: var(--background-secondary);
+  --color-foreground: var(--foreground-color);
+  --color-foreground-hover: var(--foreground-hover);
+  --color-form: var(--form-bg-color);
+  --color-b-color: var(--border-color);
+  --color-primary: var(--primary-color);
+
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-teal: var(--accent-teal);
+
+  --color-success: var(--success-color);
+  --color-warning: var(--warning-color);
+  --color-error: var(--error-color);
+  --color-info: var(--info-color);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-overlay-bg: var(--overlay-bg);
+
+  --font-ovo: "Ovo", sans-serif;
+}
+
+.dark {
+  /* Main Colors */
+  --background-color: #0d0d0d;
+  --background-secondary: #1a1a1a;
+  --foreground-color: #ff8f1f;
+  --foreground-hover: #ffa347;
+  --form-bg-color: #1c1c1e;
+  --border-color: #38383a;
+  --primary-color: #f5f5f7;
+
+  /* Accent Colors */
+  --accent-blue: #0a84ff;
+  --accent-purple: #bf5af2;
+  --accent-pink: #ff375f;
+  --accent-teal: #64d2ff;
+
+  /* Semantic Colors */
+  --success-color: #30d158;
+  --warning-color: #ff9f0a;
+  --error-color: #ff453a;
+  --info-color: #0a84ff;
+
+  /* Text Colors */
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --text-tertiary: #6e6e73;
+
+  /* Subtle Backgrounds */
+  --surface-elevated: #0a0a0a;
+  --surface-subtle: #161618;
+  --overlay-bg: rgba(0, 0, 0, 0.7);
+}
