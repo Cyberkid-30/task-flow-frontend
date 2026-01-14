@@ -1,40 +1,83 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import taskService from "../../services/taskService";
-import Input, { SelectStatus } from "../../components/ui/Input";
-import Button from "../../components/ui/Button";
-import Textbox from "../../components/ui/Textbox";
-import { getDefaultDate } from "../../utils/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  FileEdit,
-  PlusCircle,
   Calendar,
-  ListChecks,
+  FileEdit,
   FileText,
+  ListChecks,
+  PlusCircle,
   X,
 } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { z } from "zod";
+import Button from "../../components/ui/Button";
+import Input, { SelectStatus } from "../../components/ui/Input";
+import Textbox from "../../components/ui/Textbox";
+import taskService from "../../services/taskService";
+import { getDefaultDate } from "../../utils/utils";
+
+// Validation schema
+const taskSchema = z.object({
+  title: z
+    .string()
+    .min(1, "Title is required")
+    .max(100, "Title must be less than 100 characters"),
+  description: z
+    .string()
+    .max(500, "Description must be less than 500 characters")
+    .optional(),
+  status: z.enum(["todo", "in-progress", "completed"], {
+    errorMap: () => ({ message: "Invalid status" }),
+  }),
+  due_date: z
+    .string()
+    .min(1, "Due date is required")
+    .refine(
+      (date) => {
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return selectedDate >= today;
+      },
+      { message: "Due date must be today or in the future" }
+    ),
+});
 
 export default function TaskForm({ isEdit = false }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    status: "todo",
-    due_date: getDefaultDate(),
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(taskSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      status: "todo",
+      due_date: getDefaultDate(),
+    },
   });
 
   useEffect(() => {
-    if (isEdit) taskService.getTask(id).then(setForm);
-  }, [id]);
+    if (isEdit) {
+      taskService.getTask(id).then((task) => {
+        setValue("title", task.title);
+        setValue("description", task.description || "");
+        setValue("status", task.status);
+        setValue("due_date", task.due_date);
+      });
+    }
+  }, [id, isEdit, setValue]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.title) return;
-
-    console.log(form);
-    if (isEdit) await taskService.updateTask(id, form);
-    else await taskService.createTask(form);
+  const onSubmit = async (data) => {
+    console.log(data);
+    if (isEdit) await taskService.updateTask(id, data);
+    else await taskService.createTask(data);
 
     navigate("/app/tasks");
   };
@@ -76,7 +119,7 @@ export default function TaskForm({ isEdit = false }) {
 
         {/* Form Card */}
         <div className="bg-form border border-b-color rounded-b-3xl shadow-2xl p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Title Field */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 mb-2">
@@ -88,9 +131,13 @@ export default function TaskForm({ isEdit = false }) {
               <Input
                 id="title"
                 placeholder="Enter task title..."
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                {...register("title")}
               />
+              {errors.title && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.title.message}
+                </p>
+              )}
             </div>
 
             {/* Description Field */}
@@ -104,11 +151,13 @@ export default function TaskForm({ isEdit = false }) {
               <Textbox
                 id="description"
                 placeholder="Describe your task in detail..."
-                value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
+                {...register("description")}
               />
+              {errors.description && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description.message}
+                </p>
+              )}
             </div>
 
             {/* Status and Due Date Row */}
@@ -127,9 +176,13 @@ export default function TaskForm({ isEdit = false }) {
                 <SelectStatus
                   name="status"
                   id="status"
-                  value={form.status}
-                  onChange={(e) => setForm({ ...form, status: e.target.value })}
+                  {...register("status")}
                 />
+                {errors.status && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.status.message}
+                  </p>
+                )}
               </div>
 
               {/* Due Date Field */}
@@ -143,14 +196,12 @@ export default function TaskForm({ isEdit = false }) {
                     Due Date
                   </span>
                 </div>
-                <Input
-                  id="due_date"
-                  type="date"
-                  value={form.due_date}
-                  onChange={(e) =>
-                    setForm({ ...form, due_date: e.target.value })
-                  }
-                />
+                <Input id="due_date" type="date" {...register("due_date")} />
+                {errors.due_date && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.due_date.message}
+                  </p>
+                )}
               </div>
             </div>
 
