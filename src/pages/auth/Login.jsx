@@ -28,7 +28,6 @@ export default function Login() {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       await login(data);
     } catch (err) {
       let errorMessage = "Login failed";
@@ -92,7 +91,7 @@ export default function Login() {
 
           <Button
             disabled={loading}
-            className="w-full bg-gradient-to-r from-foreground to-accent-purple hover:from-foreground-hover hover:to-accent-purple text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group"
+            className="w-full bg-linear-to-r from-foreground to-accent-purple hover:from-foreground-hover hover:to-accent-purple text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group"
           >
             {loading ? (
               <>

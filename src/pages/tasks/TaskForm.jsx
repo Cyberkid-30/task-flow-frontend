@@ -10,43 +10,18 @@ import {
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import { z } from "zod";
 import Button from "../../components/ui/Button";
 import Input, { SelectStatus } from "../../components/ui/Input";
 import Textbox from "../../components/ui/Textbox";
+import { taskSchema } from "../../schema";
 import taskService from "../../services/taskService";
 import { getDefaultDate } from "../../utils/utils";
-
-// Validation schema
-const taskSchema = z.object({
-  title: z
-    .string()
-    .min(1, "Title is required")
-    .max(100, "Title must be less than 100 characters"),
-  description: z
-    .string()
-    .max(500, "Description must be less than 500 characters")
-    .optional(),
-  status: z.enum(["todo", "in-progress", "completed"], {
-    errorMap: () => ({ message: "Invalid status" }),
-  }),
-  due_date: z
-    .string()
-    .min(1, "Due date is required")
-    .refine(
-      (date) => {
-        const selectedDate = new Date(date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        return selectedDate >= today;
-      },
-      { message: "Due date must be today or in the future" }
-    ),
-});
+import { useUIStore } from "../../stores/uiStore";
 
 export default function TaskForm({ isEdit = false }) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const addToast = useUIStore((s) => s.addToast);
 
   const {
     register,
@@ -76,8 +51,13 @@ export default function TaskForm({ isEdit = false }) {
 
   const onSubmit = async (data) => {
     console.log(data);
-    if (isEdit) await taskService.updateTask(id, data);
-    else await taskService.createTask(data);
+    if (isEdit) {
+      await taskService.updateTask(id, data);
+      addToast({ message: "Task updated" });
+    } else {
+      await taskService.createTask(data);
+      addToast({ message: "Task created" });
+    }
 
     navigate("/app/tasks");
   };
