@@ -17,11 +17,13 @@ import { taskSchema } from "../../schema";
 import taskService from "../../services/taskService";
 import { getDefaultDate } from "../../utils/utils";
 import { useUIStore } from "../../stores/uiStore";
+import { useTaskStore } from "../../stores/taskStore";
 
 export default function TaskForm({ isEdit = false }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const addToast = useUIStore((s) => s.addToast);
+  const { createTask, updateTask, loading } = useTaskStore();
 
   const {
     register,
@@ -52,10 +54,10 @@ export default function TaskForm({ isEdit = false }) {
   const onSubmit = async (data) => {
     console.log(data);
     if (isEdit) {
-      await taskService.updateTask(id, data);
+      await updateTask(id, data);
       addToast({ message: "Task updated" });
     } else {
-      await taskService.createTask(data);
+      await createTask(data);
       addToast({ message: "Task created" });
     }
 
@@ -187,7 +189,7 @@ export default function TaskForm({ isEdit = false }) {
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-4">
-              <Button type="submit" className="flex-1">
+              <Button disabled={loading} type="submit" className="flex-1">
                 {isEdit ? (
                   <>
                     <FileEdit className="size-5 mr-2" strokeWidth={2} />

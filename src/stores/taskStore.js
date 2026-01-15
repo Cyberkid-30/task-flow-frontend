@@ -11,6 +11,18 @@ export const useTaskStore = create((set, get) => ({
     set({ tasks, loading: false });
   },
 
+  createTask: async (task) => {
+    set({ loading: true });
+    await taskService.createTask(task);
+    set({ loading: false });
+  },
+
+  updateTask: async (id, task) => {
+    set({ loading: true });
+    await taskService.updateTask(id, task);
+    set({ loading: false });
+  },
+
   deleteTaskOptimistic: async (id) => {
     const prev = get().tasks;
     set({ tasks: prev.filter((t) => t.id !== id) });
