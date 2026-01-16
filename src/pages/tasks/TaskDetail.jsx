@@ -15,15 +15,18 @@ export default function TaskDetail() {
       setLoading(true);
       taskService
         .getTask(id)
-        .then(setTask)
-        .catch(() => navigate("/app/tasks"));
-      setLoading(false);
+        .then((data) => {
+          setTask(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+          navigate("/app/tasks");
+        });
     };
 
-    (async () => {
-      await fetchTaskById(id);
-    })();
-  }, [id]);
+    fetchTaskById(id);
+  }, [id, navigate]);
 
   if (loading && !task) {
     return (

@@ -18,7 +18,7 @@ export default function TaskDetailItem({ task }) {
   const deleteTaskOptimistic = useTaskStore((s) => s.deleteTaskOptimistic);
 
   const handleDelete = async () => {
-    await deleteTaskOptimistic(task.id).then(() => {
+    deleteTaskOptimistic(task.id).then(() => {
       addToast({ message: "Task deleted" });
       navigate("/app/tasks");
     });
