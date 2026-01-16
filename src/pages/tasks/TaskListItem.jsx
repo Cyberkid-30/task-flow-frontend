@@ -36,7 +36,9 @@ export default function TaskListItem({ task }) {
             </h3>
             {task.description && (
               <p className="text-sm text-primary/60 mt-1 line-clamp-1">
-                {task.description.substring(0, 50)}...
+                {task.description.length > 50
+                  ? `${task.description.substring(0, 50)}...`
+                  : task.description}
               </p>
             )}
           </div>
