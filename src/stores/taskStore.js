@@ -3,24 +3,24 @@ import taskService from "../services/taskService";
 
 export const useTaskStore = create((set, get) => ({
   tasks: [],
-  loading: false,
+  isLoading: false,
 
   fetchTasks: async () => {
-    set({ loading: true });
+    set({ isLoading: true });
     const tasks = await taskService.getTasks();
-    set({ tasks, loading: false });
+    set({ tasks, isLoading: false });
   },
 
   createTask: async (task) => {
-    set({ loading: true });
+    set({ isLoading: true });
     await taskService.createTask(task);
-    set({ loading: false });
+    set({ isLoading: false });
   },
 
   updateTask: async (id, task) => {
-    set({ loading: true });
+    set({ isLoading: true });
     await taskService.updateTask(id, task);
-    set({ loading: false });
+    set({ isLoading: false });
   },
 
   deleteTaskOptimistic: async (id) => {
@@ -28,7 +28,9 @@ export const useTaskStore = create((set, get) => ({
     set({ tasks: prev.filter((t) => t.id !== id) });
 
     try {
+      set({ isLoading: true });
       await taskService.deleteTask(id);
+      set({ isLoading: false });
       await useTaskStore.fetchTasks();
     } catch {
       set({ tasks: prev });

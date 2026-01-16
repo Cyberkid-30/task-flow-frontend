@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../components/ui/Button";
 import Input, { SelectStatus } from "../../components/ui/Input";
+import { Spinner } from "../../components/ui/Spinner";
 import Textbox from "../../components/ui/Textbox";
 import { taskSchema } from "../../schema";
 import taskService from "../../services/taskService";
@@ -190,7 +191,9 @@ export default function TaskForm({ isEdit = false }) {
             {/* Action Buttons */}
             <div className="flex gap-3 pt-4">
               <Button disabled={loading} type="submit" className="flex-1">
-                {isEdit ? (
+                {loading ? (
+                  <Spinner />
+                ) : isEdit ? (
                   <>
                     <FileEdit className="size-5 mr-2" strokeWidth={2} />
                     Update Task

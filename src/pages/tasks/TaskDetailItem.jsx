@@ -3,6 +3,7 @@ import {
   Calendar,
   CheckCircle2,
   Clock,
+  Loader2Icon,
   Pencil,
   Trash2,
   User,
@@ -11,17 +12,28 @@ import { useNavigate } from "react-router-dom";
 import { useTaskStore } from "../../stores/taskStore";
 import { useUIStore } from "../../stores/uiStore";
 import { toTitleCase } from "../../utils/utils";
+import { useState } from "react";
+import DeleteModal from "../../components/ui/DeleteModal";
 
 export default function TaskDetailItem({ task }) {
   const navigate = useNavigate();
   const addToast = useUIStore((s) => s.addToast);
   const deleteTaskOptimistic = useTaskStore((s) => s.deleteTaskOptimistic);
+  const isLoading = useTaskStore((s) => s.isLoading);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleDelete = async () => {
-    deleteTaskOptimistic(task.id).then(() => {
-      addToast({ message: "Task deleted" });
-      navigate("/app/tasks");
-    });
+    // await new Promise((resolve) => setTimeout(resolve, 500));
+    deleteTaskOptimistic(task.id)
+      .then(() => {
+        setShowDeleteModal(false);
+        addToast({ message: "Task deleted" });
+        navigate("/app/tasks");
+      })
+      .catch(() => {
+        addToast({ message: "An error occurred while deleting task" });
+        setShowDeleteModal(false);
+      });
   };
 
   return (
@@ -66,8 +78,9 @@ export default function TaskDetailItem({ task }) {
               <Pencil className="size-5" strokeWidth={2} />
             </button>
             <button
-              onClick={handleDelete}
-              className="bg-red-500/10 hover:bg-red-500 text-red-600 dark:text-red-400 hover:text-white p-3 rounded-xl transition-all duration-300 cursor-pointer"
+              onClick={() => setShowDeleteModal(true)}
+              disabled={isLoading}
+              className="bg-red-500/10 hover:bg-red-500 text-red-600 dark:text-red-400 hover:text-white p-3 rounded-xl transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               title="Delete task"
             >
               <Trash2 className="size-5" strokeWidth={2} />
@@ -127,6 +140,16 @@ export default function TaskDetailItem({ task }) {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        title="Delete Task"
+        message={`Are you sure you want to delete "${task.title}"? This action cannot be undone.`}
+        isLoading={isLoading}
+      />
     </div>
   );
 }
