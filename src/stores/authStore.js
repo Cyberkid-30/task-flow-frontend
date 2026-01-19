@@ -24,13 +24,7 @@ export const useAuthStore = create(
 
       register: async (data) => {
         const res = await authService.register(data);
-        setToken(res.access_token);
-
-        set({
-          user: res.user,
-          token: res.access_token,
-          isAuthenticated: true,
-        });
+        return res;
       },
 
       logout: () => {
@@ -38,6 +32,6 @@ export const useAuthStore = create(
         set({ user: null, token: null, isAuthenticated: false });
       },
     }),
-    { name: "auth-store" }
-  )
+    { name: "auth-store" },
+  ),
 );

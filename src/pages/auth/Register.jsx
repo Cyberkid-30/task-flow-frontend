@@ -47,7 +47,7 @@ export default function Register() {
   return (
     <div className="bg-form border border-b-color rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
       {/* Header with gradient */}
-      <div className="bg-gradient-to-br from-foreground via-accent-pink to-accent-purple p-8 text-white">
+      <div className="bg-linear-to-br from-foreground via-accent-pink to-accent-purple p-8 text-white">
         <div className="flex items-center justify-center mb-3">
           <div className="bg-white/20 backdrop-blur-sm p-4 rounded-2xl">
             <UserPlus className="size-10" strokeWidth={2} />
@@ -64,7 +64,7 @@ export default function Register() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-4">
             <div className="relative">
-              <div className="absolute left-3 top-[38px] text-text-secondary">
+              <div className="absolute left-3 top-9.5 text-text-secondary">
                 <User className="size-5" strokeWidth={2} />
               </div>
               <Input
@@ -76,7 +76,7 @@ export default function Register() {
             </div>
 
             <div className="relative">
-              <div className="absolute left-3 top-[38px] text-text-secondary">
+              <div className="absolute left-3 top-9.5 text-text-secondary">
                 <Mail className="size-5" strokeWidth={2} />
               </div>
               <Input
@@ -88,7 +88,7 @@ export default function Register() {
             </div>
 
             <div className="relative">
-              <div className="absolute left-3 top-[38px] text-text-secondary">
+              <div className="absolute left-3 top-9.5 text-text-secondary">
                 <Lock className="size-5" strokeWidth={2} />
               </div>
               <Input
@@ -103,7 +103,7 @@ export default function Register() {
 
           <Button
             disabled={loading}
-            className="w-full bg-gradient-to-r from-foreground to-accent-pink hover:from-foreground-hover hover:to-accent-pink text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group"
+            className="w-full bg-linear-to-r from-foreground to-accent-pink hover:from-foreground-hover hover:to-accent-pink text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group"
           >
             {loading ? (
               <>
